@@ -10,7 +10,7 @@ package com.bradley101.Graph;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Graph<T> {
+public class Graph<T, E> {
 	public static enum WEIGH {
 		WEIGHTED,
 		NON_WEIGHTED
@@ -26,7 +26,7 @@ public class Graph<T> {
 	private List<Node> nodeList;
 	
 	public Graph() {
-		Graph(WEIGH.NON_WEIGHTED, DIRECTION.UNDIRECTED);
+		Graph(WEIGH.WEIGHTED, DIRECTION.UNDIRECTED);
 	}
 
   public Graph(WEIGH weigh, DIRECTION dir) {
@@ -34,12 +34,24 @@ public class Graph<T> {
     this.dir = dir;
     nodeList = new ArrayList<>();
   }
+
+  public DIRECTION getDir() {
+    return dir;
+  }
+
+  public WEIGH getWeigh() {
+    return weigh;
+  }
 	
-	public Node<T> newNode() {
-		return new Node<>();
+  public Node<T, E> newNode() {
+    return newNode(null);
+  }
+
+	public Node<T, E> newNode(T val) {
+		return new Node<>(val);
 	}
 	
-	private class Node<U extends T> {
+	private class Node<U extends T, F extends E> {
 		private U val;
 		private List<Node> adjacentNodes;
     private List<Edge> connectingEdges;
@@ -55,12 +67,23 @@ public class Graph<T> {
 		
 		private void initializeAdjacentList() {
 			adjacentNodes = new ArrayList<>();
+      connectingEdges = new ArrayList<>();
 		}
 
-    public void addEdge(Node adjacentNode) {
+    private void addAdjacentNode(Node node) {
+      adjacentNodes.add(node);
+    }
+
+    public void connectTo(Node adjacentNode) {
+      connectTo(adjacentNode, null);
+    }
+
+    public void connectTo(Node adjacentNode, F data) {
       if (adjacentNode == null) {
         throw new GraphException("Cannot add an edge to a null node");
-      }  
+      }
+      Edge<F> edge = new Edge(data, this, adjacentNode);
+      connectingEdges.add(edge);
     }
 		
 		public U getVal() {
@@ -87,6 +110,11 @@ public class Graph<T> {
       this.data = data;
       this.connectingNode = connectingNode;
       this.connectorNode = connectorNode;
+
+      connectorNode.addAdjacentNode(connectingNode);
+      if (Graph.this.getDir() == Graph.DIRECTION.UNDIRECTED) {
+        connectingNode.addAdjacentNode(connectorNode);
+      } 
     }
 
     public Node[] getAdjacentNodes() {
