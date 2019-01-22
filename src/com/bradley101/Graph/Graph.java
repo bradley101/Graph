@@ -21,11 +21,19 @@ public class Graph<T> {
 		UNDIRECTED
 	}
 	
+  private WEIGH weigh; 
+  private DIRECTION dir;
 	private List<Node> nodeList;
 	
 	public Graph() {
-		nodeList = new ArrayList<>();
+		Graph(WEIGH.NON_WEIGHTED, DIRECTION.UNDIRECTED);
 	}
+
+  public Graph(WEIGH weigh, DIRECTION dir) {
+    this.weigh = weigh;
+    this.dir = dir;
+    nodeList = new ArrayList<>();
+  }
 	
 	public Node<T> newNode() {
 		return new Node<>();
@@ -34,9 +42,10 @@ public class Graph<T> {
 	private class Node<U extends T> {
 		private U val;
 		private List<Node> adjacentNodes;
+    private List<Edge> connectingEdges;
 		
 		private Node() {
-			initializeAdjacentList();
+			Node(null);
 		}
 		
 		private Node(U val) {
@@ -47,6 +56,12 @@ public class Graph<T> {
 		private void initializeAdjacentList() {
 			adjacentNodes = new ArrayList<>();
 		}
+
+    public void addEdge(Node adjacentNode) {
+      if (adjacentNode == null) {
+        throw new GraphException("Cannot add an edge to a null node");
+      }  
+    }
 		
 		public U getVal() {
 			return val;
@@ -56,4 +71,44 @@ public class Graph<T> {
 			this.val = val;
 		}
 	}
+
+  class Edge<E> {
+    E data;
+    Node connectorNode, connectingNode;
+
+    Edge(Node connectorNode, Node connectingNode) {
+      Edge(null, connectorNode, connectingNode);
+    }
+
+    Edge(E data, Node connectorNode, Node connectingNode) {
+      if (connectorNode == null || connectingNode == null) {
+        throw new GraphException("Connecting  nodes cannot be null");
+      }
+      this.data = data;
+      this.connectingNode = connectingNode;
+      this.connectorNode = connectorNode;
+    }
+
+    public Node[] getAdjacentNodes() {
+      return new Node[] {connectorNode, connectingNode};
+    }
+
+    public E getData() {
+      return data;
+    }
+
+    public void setData(E data) {
+      this.data = data;
+    }
+
+
+  }
+
+  protected class GraphException extends Exception {
+    private static final long serialVersionUID = 1L;
+
+    GraphException(String msg) {
+      super(msg);
+    }
+  }
 }
