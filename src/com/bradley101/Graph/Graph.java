@@ -47,9 +47,15 @@ public class Graph<T, E> {
 	}
 
 	public Node<T, E> newNode(T val) {
-		return new Node<>(val);
+		Node node = new Node<>(val);
+		nodeList.add(node);
+		return node;
 	}
-
+	
+	public List<Node> getNodeList() {
+		return nodeList;
+	}
+	
 	class Node<U extends T, F extends E> {
 		private U val;
 		private List<Node> adjacentNodes;
@@ -73,16 +79,20 @@ public class Graph<T, E> {
 			adjacentNodes.add(node);
 		}
 
-		public void connectTo(Node adjacentNode) throws GraphException {
-			connectTo(adjacentNode, null);
+		public Edge<?> connectTo(Node adjacentNode) throws GraphException {
+			return connectTo(adjacentNode, null);
 		}
 
-		public void connectTo(Node adjacentNode, F data) throws GraphException {
+		public Edge<?> connectTo(Node adjacentNode, F data) throws GraphException {
 			if (adjacentNode == null) {
 				throw new GraphException("Cannot add an edge to a null node");
 			}
+			if (adjacentNode == this) {
+				throw new GraphException("Node cannot connect to same node");
+			}
 			Edge<F> edge = new Edge(data, this, adjacentNode);
 			connectingEdges.add(edge);
+			return edge;
 		}
 
 		public U getVal() {
