@@ -27,10 +27,17 @@ class GraphTest {
 	
 	@org.junit.jupiter.api.Test
 	void newNode() {
+		Graph<Object, Object> graph = new Graph<>();
+		Graph.Node node = graph.newNode();
+		Assertions.assertNotNull(node);
 	}
 	
 	@org.junit.jupiter.api.Test
 	void newNode1() {
+		Graph<Integer, Object> graph = new Graph<>();
+		Graph.Node node = graph.newNode(10);
+		Assertions.assertNotNull(node);
+		Assertions.assertEquals(10, node.getVal());
 	}
 	
 	@Test
@@ -45,5 +52,45 @@ class GraphTest {
 	
 	@Test
 	void newNode3() {
+	}
+	
+	@Test
+	void getData() {
+		Graph<Integer, Integer> graph = new Graph<>();
+		Graph.Node node1 = graph.newNode(10);
+		Graph.Node node2 = graph.newNode(20);
+		try {
+			Graph.Edge edge = node1.connectTo(node2, 100);
+			Assertions.assertEquals(100, edge.getData());
+		} catch (GraphException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	void getNumNodes() {
+		Graph<Integer, Integer> graph = new Graph<>();
+		Graph.Node node1 = graph.newNode(10);
+		Graph.Node node2 = graph.newNode(20);
+		try {
+			Graph.Edge edge = node1.connectTo(node2, 100);
+		} catch (GraphException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertEquals(2, graph.getNodeList().size());
+	}
+	
+	@Test
+	void getAdjacentConnectedNode() {
+		Graph<Integer, Integer> graph = new Graph<>();
+		Graph.Node node1 = graph.newNode(10);
+		Graph.Node node2 = graph.newNode(20);
+		try {
+			Graph.Edge edge = node1.connectTo(node2, 100);
+		} catch (GraphException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertEquals(node2, node1.getAdjacentNodes().get(0));
+		Assertions.assertEquals(node1, node2.getAdjacentNodes().get(0));
 	}
 }
