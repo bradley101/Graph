@@ -50,7 +50,7 @@ public class Graph<T, E> {
 		return new Node<>(val);
 	}
 
-	private class Node<U extends T, F extends E> {
+	class Node<U extends T, F extends E> {
 		private U val;
 		private List<Node> adjacentNodes;
 		private List<Edge> connectingEdges;
@@ -91,6 +91,14 @@ public class Graph<T, E> {
 
 		public void setVal(U val) {
 			this.val = val;
+		}
+		
+		public List<Node> getAdjacentNodes() {
+			return adjacentNodes;
+		}
+		
+		public List<Edge> getConnectingEdges() {
+			return connectingEdges;
 		}
 	}
 
