@@ -122,7 +122,7 @@ public class Graph<T, E> {
 		public String toString() {
 			StringBuilder str = new StringBuilder(String.format("Node: val = %d\n", val));
 			str.append(String.format("Adjacent nodes: %d\n", adjacentNodes.size()));
-			str.append(String.format("Connecting edges: %d", connectingEdges.size()));
+			str.append(String.format("Connecting edges: %d\n", connectingEdges.size()));
 			return str.toString();
 		}
 	}
@@ -143,7 +143,6 @@ public class Graph<T, E> {
 			this.connectingNode = connectingNode;
 			this.connectorNode = connectorNode;
 
-			connectorNode.addAdjacentNode(connectingNode);
 			if (Graph.this.getDir() == Graph.DIRECTION.UNDIRECTED) {
 				connectingNode.addAdjacentNode(connectorNode);
 			}
