@@ -56,6 +56,12 @@ public class Graph<T, E> {
 		return nodeList;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder str = new StringBuilder(String.format("Graph: %d nodes\n", nodeList.size()));
+		return str.toString();
+	}
+	
 	class Node<U extends T, F extends E> {
 		private U val;
 		private List<Node> adjacentNodes;
@@ -90,6 +96,7 @@ public class Graph<T, E> {
 			if (adjacentNode == this) {
 				throw new GraphException("Node cannot connect to same node");
 			}
+			adjacentNodes.add(adjacentNode);
 			Edge<F> edge = new Edge(data, this, adjacentNode);
 			connectingEdges.add(edge);
 			return edge;
@@ -110,6 +117,14 @@ public class Graph<T, E> {
 		public List<Edge> getConnectingEdges() {
 			return connectingEdges;
 		}
+		
+		@Override
+		public String toString() {
+			StringBuilder str = new StringBuilder(String.format("Node: val = %d\n", val));
+			str.append(String.format("Adjacent nodes: %d\n", adjacentNodes.size()));
+			str.append(String.format("Connecting edges: %d\n", connectingEdges.size()));
+			return str.toString();
+		}
 	}
 
 	class Edge<E> {
@@ -128,7 +143,6 @@ public class Graph<T, E> {
 			this.connectingNode = connectingNode;
 			this.connectorNode = connectorNode;
 
-			connectorNode.addAdjacentNode(connectingNode);
 			if (Graph.this.getDir() == Graph.DIRECTION.UNDIRECTED) {
 				connectingNode.addAdjacentNode(connectorNode);
 			}
@@ -145,6 +159,12 @@ public class Graph<T, E> {
 		public void setData(E data) {
 			this.data = data;
 		}
-
+		
+		@Override
+		public String toString() {
+			StringBuilder str = new StringBuilder(String.format("Edge: weight = %s (%s)", data,
+							Graph.this.getWeigh().toString()));
+			return super.toString();
+		}
 	}
 }
